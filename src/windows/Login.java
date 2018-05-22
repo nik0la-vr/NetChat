@@ -1,17 +1,44 @@
 package windows;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel contentPane;
+	private JTextField txtName;
 
+	/**
+	 * Create the frame.
+	 */
+	public Login() {
+		setTitle("Login");
+		setSize(300, 380);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		txtName = new JTextField();
+		txtName.setBounds(64, 61, 165, 20);
+		contentPane.add(txtName);
+		txtName.setColumns(10);
+		
+		JLabel lblName = new JLabel("Name:");
+		lblName.setBounds(64, 42, 46, 14);
+		contentPane.add(lblName);
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -27,17 +54,4 @@ public class Login extends JFrame {
 			}
 		});
 	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Login() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-	}
-
 }
