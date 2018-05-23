@@ -1,6 +1,5 @@
 package windows;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,11 +7,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.JTextComponent;
 
-import filters.IntFilter;
+import validation.IntegerValidator;
+import validation.MaxLenValidator;
 import validation.RequiredValidator;
 
 public class Login extends Window {
@@ -48,7 +49,6 @@ public class Login extends Window {
 		contentPane.add(lblIp);
 		
 		txtIp = new JTextField();
-		txtIp.setColumns(10);
 		txtIp.setBounds(64, 131, 165, 20);
 		contentPane.add(txtIp);
 		
@@ -65,7 +65,6 @@ public class Login extends Window {
 		txtPort = new JTextField();
 		txtPort.setColumns(10);
 		txtPort.setBounds(64, 210, 165, 20);
-		((AbstractDocument)txtPort.getDocument()).setDocumentFilter(new IntFilter(txtPort));
 		contentPane.add(txtPort);
 		
 		JLabel lblPortEg = new JLabel("(eg. 8192)");
@@ -74,6 +73,8 @@ public class Login extends Window {
 		contentPane.add(lblPortEg);
 		
 		// Validators
+		IntegerValidator txtPortInteger = new IntegerValidator(txtPort);
+		MaxLenValidator txtPortMaxLen = new MaxLenValidator(txtPort, 5);
 		RequiredValidator txtIpRequired = new RequiredValidator(txtIp);
 		RequiredValidator txtNameRequired = new RequiredValidator(txtName);
 		RequiredValidator txtPortRequired = new RequiredValidator(txtPort);
@@ -83,12 +84,11 @@ public class Login extends Window {
 		getRootPane().setDefaultButton(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Display red border around all empty text
-				// fields (not only around the first one).
-				boolean check = txtIpRequired.check();
-				check = txtNameRequired.check() && check;
-				check = txtPortRequired.check() && check;
-				if (check) {
+				boolean validIp = txtIpRequired.validate();
+				boolean validName = txtNameRequired.validate();
+				boolean validPort = txtPortRequired.validate() && txtPortInteger.validate() && txtPortMaxLen.validate();
+				
+				if (validIp && validName && validPort) {
 					login(
 						txtName.getText(),
 						txtIp.getText(),
@@ -105,4 +105,5 @@ public class Login extends Window {
 		dispose();
 		new Client(name, ip, port);
 	}
+
 }
