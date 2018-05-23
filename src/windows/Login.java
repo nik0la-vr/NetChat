@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -19,9 +21,6 @@ public class Login extends JFrame {
 	private JTextField txtIp;
 	private JTextField txtPort;
 
-	/**
-	 * Create the frame.
-	 */
 	public Login() {
 		setTitle("Login");
 		setSize(300, 380);
@@ -74,15 +73,24 @@ public class Login extends JFrame {
 		lblPortEg.setBounds(64, 234, 165, 14);
 		contentPane.add(lblPortEg);
 		
-		// Login
+		// Login Button
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = txtName.getText();
+				String ip = txtIp.getText();
+				int port = Integer.parseInt(txtPort.getText());
+				login(name, ip, port);
+			}
+		});
 		btnLogin.setBounds(102, 289, 89, 23);
 		contentPane.add(btnLogin);
 	}
 	
-	/**
-	 * Launch the application.
-	 */
+	private void login(String name, String ip, int port) {
+		dispose();
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
