@@ -1,16 +1,19 @@
 package windows;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+
+import filters.IntFilter;
 
 public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -66,6 +69,7 @@ public class Login extends JFrame {
 		txtPort = new JTextField();
 		txtPort.setColumns(10);
 		txtPort.setBounds(64, 210, 165, 20);
+		((AbstractDocument)txtPort.getDocument()).setDocumentFilter(new IntFilter(txtPort));
 		contentPane.add(txtPort);
 		
 		JLabel lblPortEg = new JLabel("(eg. 8192)");
