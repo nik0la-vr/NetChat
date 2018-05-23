@@ -5,20 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
 
 import filters.IntFilter;
 import validation.RequiredValidator;
 
-public class Login extends JFrame {
-	private JPanel contentPane;
-	
+public class Login extends Window {
 	private JTextField txtName;
 	private JTextField txtIp;
 	private JTextField txtPort;
@@ -30,12 +27,9 @@ public class Login extends JFrame {
 		setTitle("Login");
 		setResizable(false);
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		
-		contentPane = new JPanel();
+			
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		// Name
@@ -110,18 +104,5 @@ public class Login extends JFrame {
 	private void login(String name, String ip, int port) {
 		dispose();
 		new Client(name, ip, port);
-	}
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }

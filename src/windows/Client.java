@@ -22,14 +22,13 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-public class Client extends JFrame {
+public class Client extends Window {
 	private int port;
 	private String ip;
 	private String name;
 	
-	private JPanel contentPane;
-	private JTextField txtMessage;
 	private JTextPane textPane;
+	private JTextField txtMessage;
 	
 	private static final int PADDING = 10;
 	private static final int FRAME_WIDTH = 640;
@@ -44,10 +43,10 @@ public class Client extends JFrame {
 	}
 
 	private Client() {
+		super();
 		// JFrame
 		setTitle("Chat Client");
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
@@ -60,9 +59,7 @@ public class Client extends JFrame {
 		};
 		
 		// contentPane
-		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
-		setContentPane(contentPane);
 		
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{0, 30};
