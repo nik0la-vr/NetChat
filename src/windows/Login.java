@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
 
 import filters.IntFilter;
+import validation.Required;
 
 public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -81,10 +82,18 @@ public class Login extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = txtName.getText();
-				String ip = txtIp.getText();
-				int port = Integer.parseInt(txtPort.getText());
-				login(name, ip, port);
+				// Display red border around all empty text
+				// fields (not only around the first one).
+				boolean check = Required.check(txtName);
+				check = Required.check(txtIp) && check;
+				check = Required.check(txtPort) && check;
+				if (check) {
+					login(
+						txtName.getText(),
+						txtIp.getText(),
+						Integer.parseInt(txtPort.getText())
+					);
+				}
 			}
 		});
 		btnLogin.setBounds(102, 289, 89, 23);
@@ -92,6 +101,7 @@ public class Login extends JFrame {
 	}
 	
 	private void login(String name, String ip, int port) {
+		new Client(name, ip, port);
 		dispose();
 	}
 	
