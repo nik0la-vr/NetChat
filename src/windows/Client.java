@@ -1,9 +1,12 @@
 package windows;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -11,11 +14,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
-
-import org.omg.PortableInterceptor.USER_EXCEPTION;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 public class Client extends JFrame {
 	private int port;
@@ -24,7 +29,7 @@ public class Client extends JFrame {
 	
 	private JPanel contentPane;
 	private JTextField txtMessage;
-	private JTextArea txtrHistory;
+	private JTextPane textPane;
 	
 	private static final int PADDING = 10;
 	private static final int FRAME_WIDTH = 640;
@@ -35,7 +40,7 @@ public class Client extends JFrame {
 		this.ip = ip;
 		this.name = name;
 		this.port = port;
-		console(String.format("Attempting connection to %s:%s", ip, port));
+		console(String.format("Attempting connection to %s:%s", ip, port), Color.BLUE);
 	}
 
 	private Client() {
@@ -66,11 +71,21 @@ public class Client extends JFrame {
 		gbl_contentPane.rowWeights = new double[]{1.0};
 		contentPane.setLayout(gbl_contentPane);
 		
-		// txtrHistory
-		txtrHistory = new JTextArea();
-		JScrollPane scrollPane = new JScrollPane(txtrHistory);
-		txtrHistory.setEditable(false);
-		
+		// textPane
+		textPane = new JTextPane();
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		textPane.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				// Prevent user from typing.
+				txtMessage.requestFocusInWindow();
+			}
+		});
+
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -104,8 +119,25 @@ public class Client extends JFrame {
 		txtMessage.requestFocusInWindow();
 	}
 	
-	public void console(String message) {
-		txtrHistory.append(String.format("%s: %s\n", name, message));
+	private void console(String message) {
+		console(message, Color.BLACK);
 	}
+	
+	private void console(String message, Color color) {
+		appendToPane(String.format("%s: %s\n", name, message), color);
+	}
+	
+	private void appendToPane(String message, Color color)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
+        int len = textPane.getDocument().getLength();
+        textPane.setCaretPosition(len);
+        textPane.setCharacterAttributes(aset, false);
+        textPane.replaceSelection(message);
+    }
+	
 }
