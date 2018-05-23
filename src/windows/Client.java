@@ -4,7 +4,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,7 +38,7 @@ public class Client extends JFrame {
 		
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{0, 30};
-		gbl_contentPane.rowHeights = new int[]{0, 30};
+		gbl_contentPane.rowHeights = new int[]{0, 25};
 		gbl_contentPane.columnWeights = new double[]{1.0};
 		gbl_contentPane.rowWeights = new double[]{1.0};
 		contentPane.setLayout(gbl_contentPane);
@@ -54,10 +53,9 @@ public class Client extends JFrame {
 		contentPane.add(txtHistory, gbc_txtHistory);
 		
 		txtMessage = new JTextField();
-		txtMessage.setBorder(BorderFactory.createEmptyBorder());
 		GridBagConstraints gbc_txtMessage = new GridBagConstraints();
 		gbc_txtMessage.insets = new Insets(0, 0, 0, 5);
-		gbc_txtMessage.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtMessage.fill = GridBagConstraints.BOTH;
 		gbc_txtMessage.gridx = 0;
 		gbc_txtMessage.gridy = 1;
 		contentPane.add(txtMessage, gbc_txtMessage);
@@ -65,6 +63,7 @@ public class Client extends JFrame {
 		
 		JButton btnSend = new JButton("Send");
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.fill = GridBagConstraints.VERTICAL;
 		gbc_btnSend.gridx = 1;
 		gbc_btnSend.gridy = 1;
 		contentPane.add(btnSend, gbc_btnSend);

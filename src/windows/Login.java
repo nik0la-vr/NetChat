@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
 
 import filters.IntFilter;
-import validation.Required;
+import validation.RequiredValidator;
 
 public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -81,6 +81,11 @@ public class Login extends JFrame {
 		lblPortEg.setBounds(64, 234, 165, 14);
 		contentPane.add(lblPortEg);
 		
+		// Validators
+		RequiredValidator txtIpRequired = new RequiredValidator(txtIp);
+		RequiredValidator txtNameRequired = new RequiredValidator(txtName);
+		RequiredValidator txtPortRequired = new RequiredValidator(txtPort);
+		
 		// Login Button
 		JButton btnLogin = new JButton("Login");
 		getRootPane().setDefaultButton(btnLogin);
@@ -88,9 +93,9 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Display red border around all empty text
 				// fields (not only around the first one).
-				boolean check = Required.check(txtName);
-				check = Required.check(txtIp) && check;
-				check = Required.check(txtPort) && check;
+				boolean check = txtIpRequired.check();
+				check = txtNameRequired.check() && check;
+				check = txtPortRequired.check() && check;
 				if (check) {
 					login(
 						txtName.getText(),
