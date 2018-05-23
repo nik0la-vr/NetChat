@@ -24,13 +24,16 @@ public class Login extends JFrame {
 	private JTextField txtName;
 	private JTextField txtIp;
 	private JTextField txtPort;
+	
+	private static final int FRAME_WIDTH = 300;
+	private static final int FRAME_HEIGHT = 380;
 
 	public Login() {
 		setTitle("Login");
-		setSize(300, 380);
 		setResizable(false);
-		setLocationRelativeTo(null);
+		setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,6 +83,7 @@ public class Login extends JFrame {
 		
 		// Login Button
 		JButton btnLogin = new JButton("Login");
+		getRootPane().setDefaultButton(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Display red border around all empty text
@@ -101,8 +105,8 @@ public class Login extends JFrame {
 	}
 	
 	private void login(String name, String ip, int port) {
-		new Client(name, ip, port);
 		dispose();
+		new Client(name, ip, port);
 	}
 	
 	public static void main(String[] args) {

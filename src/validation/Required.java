@@ -11,7 +11,8 @@ public class Required {
 			text.setBorder(BorderFactory.createLineBorder(Color.RED));
 			return false;			
 		} else {
-			text.setBorder(null);
+			// 'null' tells the look & feel to use the native border style
+			text.setBorder(BorderFactory.createEmptyBorder());
 			return true;
 		}
 	}
