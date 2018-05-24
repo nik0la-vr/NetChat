@@ -1,4 +1,4 @@
-package windows;
+package forms;
 
 import validation.IntegerValidator;
 import validation.MaxLenValidator;
@@ -6,22 +6,16 @@ import validation.RequiredValidator;
 
 import javax.swing.*;
 
-public class Login {
+public class LoginForm extends AbstractForm {
+    private JPanel panel;
     private JTextField txtIp;
     private JTextField txtPort;
     private JButton btnConnect;
-    private JPanel panel;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Login");
-        frame.setContentPane(new Login().panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+    public LoginForm() {
+        super.createWindow(panel);
+        super.setDefaultButton(btnConnect);
 
-    private Login() {
         IntegerValidator txtPortInteger = new IntegerValidator(txtPort);
         MaxLenValidator txtPortMaxLen = new MaxLenValidator(txtPort, 5);
         RequiredValidator txtIpRequired = new RequiredValidator(txtIp);
@@ -32,8 +26,14 @@ public class Login {
             boolean validPort = txtPortRequired.validate() && txtPortInteger.validate() && txtPortMaxLen.validate();
 
             if (validIp && validPort) {
-
+                super.dispose();
+                new ChatForm(txtIp.getText(), Integer.parseInt(txtPort.getText()));
             }
         });
     }
+
+    public String getTitle() {
+        return "Login";
+    }
+
 }

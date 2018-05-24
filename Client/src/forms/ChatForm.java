@@ -1,4 +1,4 @@
-package windows;
+package forms;
 
 import core.Client;
 
@@ -12,23 +12,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-class Chat {
+public class ChatForm extends AbstractForm {
     private Client client;
 
     private JPanel panel;
+    private JButton btnSend;
     private JTextPane textPane;
     private JTextField txtMessage;
-    private JButton btnSend;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Chat");
-        frame.setContentPane(new Chat().panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+    public static final int FRAME_WIDTH = 640;
+    public static final int FRAME_HEIGHT = 480;
+
+    public static final Color colorInfo = Color.BLUE;
+    public static final Color colorError = Color.RED;
+    public static final Color colorWarn = Color.ORANGE;
+    public static final Color colorSuccess = new Color(0, 102, 0);
+
+    public ChatForm(String ip, int port) {
+        this();
+        client = new Client(this, ip, port);
     }
 
-    private Chat() {
+    private ChatForm() {
+        super.createWindow(panel, FRAME_WIDTH, FRAME_HEIGHT);
+        super.setDefaultButton(btnSend);
+
         textPane.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -39,7 +47,7 @@ class Chat {
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                console(txtMessage.getText());
+                client.sendRequest(txtMessage.getText());
                 txtMessage.setText("");
             }
         };
@@ -48,17 +56,7 @@ class Chat {
         btnSend.addActionListener(action);
     }
 
-
-    private void console(String message) {
-        console(message, Color.BLACK);
-    }
-
-    private void console(String message, Color color) {
-        appendToPane(String.format("%s: %s\n", client.getName(), message), color);
-    }
-
-    private void appendToPane(String message, Color color)
-    {
+    public void write(String message, Color color) {
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
@@ -68,6 +66,10 @@ class Chat {
         textPane.setCaretPosition(len);
         textPane.setCharacterAttributes(aset, false);
         textPane.replaceSelection(message);
+    }
+
+    public String getTitle() {
+        return "Chat";
     }
 
 }

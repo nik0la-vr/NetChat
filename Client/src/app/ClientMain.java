@@ -1,11 +1,19 @@
 package app;
 
-import windows.Login;
+import forms.LoginForm;
+
+import javax.swing.*;
 
 public class ClientMain {
 
     public static void main(String[] args) {
-        Login.main(args);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new LoginForm();
     }
 
 }
