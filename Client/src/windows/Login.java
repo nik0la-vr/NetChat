@@ -22,10 +22,10 @@ public class Login extends Window {
 	private static final int FRAME_HEIGHT = 380;
 
 	public Login() {
-		setTitle("Login");
-		setResizable(false);
-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		setLocationRelativeTo(null);
+		frame.setTitle("Login");
+		frame.setResizable(false);
+		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		frame.setLocationRelativeTo(null);
 			
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -78,7 +78,7 @@ public class Login extends Window {
 		
 		// Login Button
 		JButton btnLogin = new JButton("Login");
-		getRootPane().setDefaultButton(btnLogin);
+		frame.getRootPane().setDefaultButton(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean validIp = txtIpRequired.validate();
@@ -99,7 +99,7 @@ public class Login extends Window {
 	}
 	
 	private void login(String name, String ip, int port) {
-		dispose();
+		frame.dispose();
 		new Client(name, ip, port);
 	}
 

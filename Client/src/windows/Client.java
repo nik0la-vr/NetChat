@@ -43,10 +43,10 @@ public class Client extends Window {
 	private Client() {
 		super();
 		// JFrame
-		setTitle("Chat Client");
-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
-		setLocationRelativeTo(null);
-		setVisible(true);
+		frame.setTitle("Chat Client");
+		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 		
 		Action action = new AbstractAction() {
 			@Override

@@ -3,12 +3,15 @@ package windows;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public abstract class Window extends JFrame {
-	protected JPanel contentPane;
+abstract class Window {
+	JFrame frame;
+	JPanel contentPane;
 	
 	public Window() {
+		frame = new JFrame();
 		contentPane = new JPanel();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }
