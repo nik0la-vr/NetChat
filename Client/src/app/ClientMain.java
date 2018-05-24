@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.UIManager;
 import windows.Login;
 
-public class Main {
+public class ClientMain {
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

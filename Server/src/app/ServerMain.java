@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 import workers.ServerWorker;
 
-public class Main {
-	
-	private static boolean working = true;
+public class ServerMain {
 
 	public static void main(String[] args) {
+        boolean working = true;
+
 		try {
 			System.out.print("Port number: ");
 			
@@ -33,10 +33,6 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void turnOff() {
-		working = false;
 	}
 
 }
