@@ -1,8 +1,7 @@
 package app;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import core.Server;
+
 import java.util.Scanner;
 
 public class ServerMain {
@@ -10,9 +9,10 @@ public class ServerMain {
 	public static void main(String[] args) {
         System.out.print("Enter port number: ");
 	    Scanner scanner = new Scanner(System.in);
-        Server server = new Server(scanner.nextInt());
+	    int port = scanner.nextInt();
         scanner.close();
 
+        Server server = new Server(port);
         server.run();
 	}
 

@@ -1,4 +1,4 @@
-package app;
+package core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,10 +50,10 @@ class ServerWorker extends Thread {
                         if (tokens.size() > 0) {
                             name = String.join(" ", tokens);
                         } else {
-                            write("error expected name <name>");
+                            write("error expected 'name <name>'");
                         }
                     } else {
-                        write("error required name");
+                        write("error name");
                     }
                 } else {
                     switch (command) {

@@ -1,21 +1,21 @@
-package app;
+package core;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-class Server {
+public class Server {
     private final int port;
 
     final ArrayList<ServerWorker> workers;
 
-    Server(int port) {
+    public Server(int port) {
         this.port = port;
         workers = new ArrayList<>();
     }
 
-    void run() {
+    public void run() {
         try {
             boolean working = true;
             ServerSocket serverSocket = new ServerSocket(port);
