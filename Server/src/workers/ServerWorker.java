@@ -35,20 +35,16 @@ public class ServerWorker extends Thread {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
 			for (
-				String line = reader.readLine(); // unutar readLine je beskonacna petlja koja se vrti sve dok je bafer prazan
-				!(socket.isClosed() || line.equalsIgnoreCase("quit") || line == null);
+				String line = reader.readLine(); // blokira sve dok nema client inputa
+				!(line == null || line.equalsIgnoreCase("quit"));
 				line = reader.readLine()
 			) {
 				
 				System.out.println(id + " -> " + line);
 			
 			}
-
-			if (!socket.isClosed()) {
-				socket.close();
-			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(String.format("Connection to %s was abruptly closed.", id));
 		}
 	}
 }
