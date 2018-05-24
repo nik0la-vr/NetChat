@@ -24,7 +24,7 @@ public class Main {
 				System.out.println("Waiting for connection...");
 				Socket clientSocket = serverSocket.accept();
 				System.out.println(String.format("Connected to %s:%d.", clientSocket.getInetAddress().getHostAddress(), clientSocket.getPort()));
-				// za svakog klijenta pravimo novi thread, pre svega zato sto je accept metoda blokirajuca
+				// za svakog klijenta pravimo novi thread
 				ServerWorker worker = new ServerWorker(clientSocket);
 				worker.start();
 			}

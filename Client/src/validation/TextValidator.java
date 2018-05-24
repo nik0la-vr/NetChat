@@ -1,10 +1,8 @@
 package validation;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.ToolTipManager;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 

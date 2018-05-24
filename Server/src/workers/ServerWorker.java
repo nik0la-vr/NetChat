@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import javax.sound.sampled.Line;
-
 public class ServerWorker extends Thread {
 	
 	// client
@@ -33,15 +31,8 @@ public class ServerWorker extends Thread {
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-			for (
-				String line = reader.readLine(); // blokira sve dok nema client inputa
-				!(line == null || line.equalsIgnoreCase("quit"));
-				line = reader.readLine()
-			) {
-				
+			for (String line = reader.readLine(); !(line == null || line.equalsIgnoreCase("quit")); line = reader.readLine()) {
 				System.out.println(id + " -> " + line);
-			
 			}
 		} catch (IOException e) {
 			System.out.println(String.format("Connection to %s was abruptly closed.", id));

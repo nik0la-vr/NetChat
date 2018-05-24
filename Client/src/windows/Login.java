@@ -8,9 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.DocumentFilter;
-import javax.swing.text.JTextComponent;
 
 import validation.IntegerValidator;
 import validation.MaxLenValidator;
