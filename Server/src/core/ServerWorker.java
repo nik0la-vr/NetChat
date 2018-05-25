@@ -22,14 +22,14 @@ class ServerWorker extends Thread {
 	ServerWorker(Server server, Socket socket) {
 		this.server = server;
 	    this.socket = socket;
-		id = String.format("%s:%d", socket.getInetAddress().getHostAddress(), socket.getPort());
 
-        System.out.println(String.format("Connected to %s.", id));
+	    id = String.format("%s:%d", socket.getInetAddress().getHostAddress(), socket.getPort());
 
         try {
 			in  = socket.getInputStream();
 			out = socket.getOutputStream();
-		} catch (IOException e) {
+            System.out.println(String.format("Connected to %s.", id));
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -38,6 +38,7 @@ class ServerWorker extends Thread {
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
 			for (String line = reader.readLine(); !(line == null || line.equalsIgnoreCase("quit")); line = reader.readLine()) {
 				if (line.equals("")) continue;
 
@@ -49,27 +50,36 @@ class ServerWorker extends Thread {
                     if (command.equals("name")) {
                         if (tokens.size() > 0) {
                             name = String.join(" ", tokens);
+                            server.workers.put(name, this);
                         } else {
-                            write("error expected 'name <name>'");
+                            sendMessage("error expected 'name <name>'");
                         }
                     } else {
-                        write("error name");
+                        sendMessage("error name");
                     }
                 } else {
                     switch (command) {
                         default:
-                            write("error unknown");
+                            sendMessage("error unknown");
                             break;
                     }
                 }
-
 			}
-		} catch (IOException e) {
-			System.out.println(String.format("Connection to %s was abruptly closed.", id));
+
+            removeMe(server.workers);
+        } catch (IOException e) {
+		    removeMe(server.workers);
+			System.out.println(String.format("Connection to %s was abruptly closed.", name != null ? name : id));
 		}
 	}
 
-	private void write(String message) throws IOException {
+	private void removeMe(Map<String, ServerWorker> map) {
+	    if (name != null) {
+	        map.remove(name);
+        }
+    }
+
+	private void sendMessage(String message) throws IOException {
         out.write(message.getBytes());
     }
 

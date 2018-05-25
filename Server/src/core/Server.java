@@ -4,15 +4,17 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
     private final int port;
 
-    final ArrayList<ServerWorker> workers;
+    final Map<String, ServerWorker> workers;
 
     public Server(int port) {
         this.port = port;
-        workers = new ArrayList<>();
+        workers = new HashMap<>();
     }
 
     public void run() {
@@ -27,7 +29,6 @@ public class Server {
                 // za svakog klijenta pravimo novi thread
                 ServerWorker worker = new ServerWorker(this, clientSocket);
                 worker.start();
-                workers.add(worker);
             }
 
             serverSocket.close();
