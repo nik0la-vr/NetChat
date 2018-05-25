@@ -53,6 +53,7 @@ class ServerWorker extends Thread {
                             if (server.workers.containsKey(myName)) {
                                 sendMessage("name taken");
                             } else {
+                                name = myName;
                                 broadcastMessage("online " + name);
                                 server.workers.put(name, this);
                                 sendMessage("name ok");
