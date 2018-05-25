@@ -21,6 +21,7 @@ public class Server {
         try {
             boolean working = true;
             ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println(serverSocket.getInetAddress().getHostAddress() + ":" + port);
 
             while (working) {
                 // neprekidno osluskujemo ima li novih konekcija
