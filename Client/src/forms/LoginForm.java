@@ -32,7 +32,8 @@ public class LoginForm extends AbstractForm {
         });
     }
 
-    public String getTitle() {
+    @Override
+    String getInitialTitle() {
         return "Login";
     }
 

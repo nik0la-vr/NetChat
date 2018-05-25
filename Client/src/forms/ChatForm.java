@@ -33,6 +33,7 @@ public class ChatForm extends AbstractForm {
     public ChatForm(String ip, int port) {
         this();
         client = new Client(this, ip, port);
+        client.start();
     }
 
     private ChatForm() {
@@ -71,7 +72,12 @@ public class ChatForm extends AbstractForm {
         listModel.removeElement(name);
     }
 
+    public void write(String message) {
+        write(message, Color.BLACK);
+    }
+
     public void write(String message, Color color) {
+        message += "\n";
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
@@ -83,7 +89,12 @@ public class ChatForm extends AbstractForm {
         textPane.replaceSelection(message);
     }
 
-    public String getTitle() {
+    public String getRecipient() {
+        return list.getSelectedValue();
+    }
+
+    @Override
+    String getInitialTitle() {
         return "Chat";
     }
 

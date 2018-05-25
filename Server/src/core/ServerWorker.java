@@ -1,12 +1,10 @@
 package core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 class ServerWorker extends Thread {
 	
@@ -42,6 +40,8 @@ class ServerWorker extends Thread {
 			for (String line = reader.readLine(); !(line == null || line.equalsIgnoreCase("quit")); line = reader.readLine()) {
 				if (line.equals("")) continue;
 
+                System.out.print("received: " + line);
+
 				ArrayList<String> tokens = new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
                 String command = tokens.get(0);
                 tokens.remove(0);
@@ -49,25 +49,33 @@ class ServerWorker extends Thread {
                 if (name == null) {
                     if (command.equals("name")) {
                         if (tokens.size() > 0) {
-                            String myName = String.join(" ", tokens);
+                            String myName = tokens.get(0);
                             if (server.workers.containsKey(myName)) {
-                                sendMessage("name taken");
+                                sendCommand("name taken");
                             } else {
                                 name = myName;
-                                broadcastMessage("online " + name);
+                                broadcastCommand("online " + name);
                                 server.workers.put(name, this);
-                                sendMessage("name ok");
+                                sendCommand("name ok");
                             }
                         } else {
-                            sendMessage("error expected 'name <name>'");
+                            sendCommand("error expected 'name <name>'");
                         }
                     } else {
-                        sendMessage("error name");
+                        sendCommand("error name");
                     }
                 } else {
                     switch (command) {
+                        case "send":
+                            String recipientName = tokens.get(0);
+                            tokens.remove(0);
+                            ServerWorker recipient = server.workers.get(recipientName);
+                            if (recipient != null) {
+                                recipient.sendCommand(String.format("receive %s %s", name, String.join(" ", tokens)));
+                            }
+                            break;
                         default:
-                            sendMessage("error unknown");
+                            sendCommand("error unknown");
                             break;
                     }
                 }
@@ -87,17 +95,17 @@ class ServerWorker extends Thread {
 	private void logout(Map<String, ServerWorker> map) throws IOException {
 	    if (name != null) {
 	        map.remove(name);
-	        broadcastMessage("offline " + name);
+            broadcastCommand("offline " + name);
         }
     }
 
-    private void broadcastMessage(String message) throws IOException {
+    private void broadcastCommand(String message) throws IOException {
         for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
-            entry.getValue().sendMessage(message);
+            entry.getValue().sendCommand(message);
         }
     }
 
-	private void sendMessage(String message) throws IOException {
+    private void sendCommand(String message) throws IOException {
         out.write(message.getBytes());
     }
 

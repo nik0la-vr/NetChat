@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Client extends  Thread {
+public class Client extends Thread {
     private String name;
     private Socket socket;
     private InputStream in;
@@ -22,10 +22,10 @@ public class Client extends  Thread {
             socket = new Socket(ip, port);
             in = new BufferedInputStream(socket.getInputStream());
             out = new BufferedOutputStream(socket.getOutputStream());
-            chatForm.write("Connection to the server established.\n", ChatForm.colorSuccess);
-            chatForm.write("You have to set your name by typing 'name <name>'.\n", ChatForm.colorInfo);
+            chatForm.write("Connection to the server established.", ChatForm.colorSuccess);
+            chatForm.write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
         } catch (IOException e) {
-            chatForm.write("There was a problem connecting to the server, please try again.\n", ChatForm.colorError);
+            chatForm.write("There was a problem connecting to the server, please try again.", ChatForm.colorError);
         }
     }
 
@@ -50,23 +50,29 @@ public class Client extends  Thread {
                     case "offline":
                         chatForm.removeUser(String.join(" ", tokens));
                         break;
+                    case "receive":
+                        String sender = tokens.get(0);
+                        tokens.remove(0);
+                        chatForm.write(String.format("%s: %s", sender, String.join(" ", tokens)));
+                        break;
                     case "name":
                         if (tokens.get(0).equals("ok")) {
                             name = chosenName;
-                            chatForm.write(String.format("Name set to %s.", name), ChatForm.colorError);
+                            chatForm.setTitle(String.format("%s (%s)", chatForm.getTitle(), name));
+                            chatForm.write(String.format("Name set to %s.", name), ChatForm.colorSuccess);
                         } else {
                             chatForm.write("That name is already taken.", ChatForm.colorError);
                         }
                         chosenName = null;
                         break;
                     default:
-                        chatForm.write(String.format("Server sent unknown command '%s'.\n", command), ChatForm.colorWarn);
+                        chatForm.write(String.format("Server sent unknown command '%s'.", command), ChatForm.colorWarn);
                         sendCommand("error unknown " + command);
                         break;
                 }
             }
         } catch (IOException e) {
-            chatForm.write("Connection to the server was abruptly closed.\n", ChatForm.colorError);
+            chatForm.write("Connection to the server was abruptly closed.", ChatForm.colorError);
         }
     }
 
@@ -77,15 +83,25 @@ public class Client extends  Thread {
             if (name == null && chosenName == null) {
                 ArrayList<String> tokens = parse(message);
                 if (tokens.get(0).equals("name")) {
-                    tokens.remove(0);
-                    chosenName = String.join(" ", tokens);
-                    sendCommand("name " + chosenName);
+                    if (tokens.size() == 2) {
+                        chosenName = tokens.get(1);
+                        sendCommand("name " + chosenName);
+                    } else {
+                        chatForm.write("Name should not contain whitespaces.", ChatForm.colorError);
+                    }
                 } else {
-                    chatForm.write("You have to set your name by typing 'name <name>'.\n", ChatForm.colorInfo);
+                    chatForm.write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
+                }
+            } else {
+                String recipient = chatForm.getRecipient();
+                if (recipient != null) {
+                    sendCommand(String.format("send %s %s", recipient, message));
+                } else {
+                    chatForm.write("You need to choose a recipient before this message can be sent", ChatForm.colorError);
                 }
             }
         } catch (IOException e) {
-            chatForm.write("Couldn't send message to the server.\n", ChatForm.colorError);
+            chatForm.write("Couldn't send message to the server.", ChatForm.colorError);
         }
     }
 
@@ -108,5 +124,4 @@ public class Client extends  Thread {
     private void sendCommand(String message) throws IOException {
         out.write(message.getBytes());
     }
-
 }

@@ -10,7 +10,7 @@ abstract class AbstractForm {
     }
 
     void createWindow(JPanel panel) {
-        frame = new JFrame(this.getTitle());
+        frame = new JFrame(this.getInitialTitle());
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -19,7 +19,7 @@ abstract class AbstractForm {
     }
 
     void createWindow(JPanel panel, int width, int height) {
-        frame = new JFrame(this.getTitle());
+        frame = new JFrame(this.getInitialTitle());
         frame.setContentPane(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width, height);
@@ -31,9 +31,13 @@ abstract class AbstractForm {
         frame.dispose();
     }
 
+    public String getTitle() {
+        return frame.getTitle();
+    }
+
     public void setTitle(String title) {
         frame.setTitle(title);
     }
 
-    public abstract String getTitle();
+    abstract String getInitialTitle();
 }
