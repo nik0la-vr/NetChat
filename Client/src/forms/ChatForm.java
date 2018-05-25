@@ -19,6 +19,7 @@ public class ChatForm extends AbstractForm {
     private JButton btnSend;
     private JTextPane textPane;
     private JTextField txtMessage;
+    private JList list;
 
     public static final int FRAME_WIDTH = 640;
     public static final int FRAME_HEIGHT = 480;
