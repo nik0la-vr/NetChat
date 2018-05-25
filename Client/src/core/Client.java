@@ -43,6 +43,12 @@ public class Client extends  Thread {
                     case "error":
                         error(tokens);
                         break;
+                    case "online":
+                        chatForm.addUser(String.join(" ", tokens));
+                        break;
+                    case "offline":
+                        chatForm.removeUser(String.join(" ", tokens));
+                        break;
                     default:
                         chatForm.write(String.format("Server sent unknown command '%s'.\n", command), ChatForm.colorWarn);
                         sendCommand("error unknown " + command);

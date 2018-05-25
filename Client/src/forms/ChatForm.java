@@ -18,8 +18,9 @@ public class ChatForm extends AbstractForm {
     private JPanel panel;
     private JButton btnSend;
     private JTextPane textPane;
+    private JList<String> list;
     private JTextField txtMessage;
-    private JList list;
+    private DefaultListModel<String> listModel;
 
     public static final int FRAME_WIDTH = 640;
     public static final int FRAME_HEIGHT = 480;
@@ -55,6 +56,19 @@ public class ChatForm extends AbstractForm {
 
         txtMessage.addActionListener(action);
         btnSend.addActionListener(action);
+    }
+
+    private void createUIComponents() {
+        listModel = new DefaultListModel<>();
+        list = new JList<>(listModel);
+    }
+
+    public void addUser(String name) {
+        listModel.addElement(name);
+    }
+
+    public void removeUser(String name) {
+        listModel.removeElement(name);
     }
 
     public void write(String message, Color color) {
