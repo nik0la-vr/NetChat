@@ -54,7 +54,7 @@ public class Client extends  Thread {
         }
     }
 
-    public void sendRequest(String message) {
+    public void sendMessage(String message) {
         if (message.equals("")) return;
 
         try {
@@ -62,7 +62,7 @@ public class Client extends  Thread {
                 ArrayList<String> tokens = parse(message);
                 if (tokens.get(0).equals("name")) {
                     tokens.remove(0);
-                    String myName = remainingString(tokens);
+                    String myName = String.join(" ", tokens);
                     name = myName;
                     sendCommand("name " + myName);
                 } else {
@@ -76,14 +76,6 @@ public class Client extends  Thread {
 
     private ArrayList<String> parse(String line) {
         return new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
-    }
-
-    private String remainingString(ArrayList<String> tokens) {
-        StringBuilder sb = new StringBuilder();
-        for (String token : tokens) {
-            sb.append(token).append(" ");
-        }
-        return sb.toString();
     }
 
     private void error(ArrayList<String> tokens) {

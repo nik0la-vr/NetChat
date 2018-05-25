@@ -47,7 +47,7 @@ public class ChatForm extends AbstractForm {
         Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.sendRequest(txtMessage.getText());
+                client.sendMessage(txtMessage.getText());
                 txtMessage.setText("");
             }
         };
