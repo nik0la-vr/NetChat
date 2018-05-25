@@ -45,7 +45,7 @@ public class Client extends Thread {
                         } else if (tokens[1].equals("all")) {
                             for (int i = 2; i < tokens.length; ++i) {
                                 if (!tokens[i].equals(name)) {
-                                    chatForm.addUser(tokens[2]);
+                                    chatForm.addUser(tokens[i]);
                                 }
                             }
                         }
