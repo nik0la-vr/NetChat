@@ -13,6 +13,7 @@ public class Client extends  Thread {
     private InputStream in;
     private OutputStream out;
     private ChatForm chatForm;
+    private String chosenName;
 
     public Client(ChatForm chatForm, String ip, int port) {
         this.chatForm = chatForm;
@@ -49,6 +50,15 @@ public class Client extends  Thread {
                     case "offline":
                         chatForm.removeUser(String.join(" ", tokens));
                         break;
+                    case "name":
+                        if (tokens.get(0).equals("ok")) {
+                            name = chosenName;
+                            chatForm.write(String.format("Name set to %s.", name), ChatForm.colorError);
+                        } else {
+                            chatForm.write("That name is already taken.", ChatForm.colorError);
+                        }
+                        chosenName = null;
+                        break;
                     default:
                         chatForm.write(String.format("Server sent unknown command '%s'.\n", command), ChatForm.colorWarn);
                         sendCommand("error unknown " + command);
@@ -64,13 +74,12 @@ public class Client extends  Thread {
         if (message.equals("")) return;
 
         try {
-            if (name == null) {
+            if (name == null && chosenName == null) {
                 ArrayList<String> tokens = parse(message);
                 if (tokens.get(0).equals("name")) {
                     tokens.remove(0);
-                    String myName = String.join(" ", tokens);
-                    name = myName;
-                    sendCommand("name " + myName);
+                    chosenName = String.join(" ", tokens);
+                    sendCommand("name " + chosenName);
                 } else {
                     chatForm.write("You have to set your name by typing 'name <name>'.\n", ChatForm.colorInfo);
                 }

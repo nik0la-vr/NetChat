@@ -49,9 +49,14 @@ class ServerWorker extends Thread {
                 if (name == null) {
                     if (command.equals("name")) {
                         if (tokens.size() > 0) {
-                            name = String.join(" ", tokens);
-                            broadcastMessage("online " + name);
-                            server.workers.put(name, this);
+                            String myName = String.join(" ", tokens);
+                            if (server.workers.containsKey(myName)) {
+                                sendMessage("name taken");
+                            } else {
+                                broadcastMessage("online " + name);
+                                server.workers.put(name, this);
+                                sendMessage("name ok");
+                            }
                         } else {
                             sendMessage("error expected 'name <name>'");
                         }
