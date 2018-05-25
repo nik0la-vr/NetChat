@@ -35,7 +35,8 @@ public class Client extends Thread {
 
             while ((line = in.readLine()) != null) {
                 String tokens[] = line.split("\\s+");
-                System.out.println("Received:\n\t" + line);
+                System.out.println("Received:\n  " + line);
+                tokens[0] = tokens[0].toUpperCase();
 
                 switch (tokens[0]) {
                     case "ONLINE":
@@ -99,7 +100,9 @@ public class Client extends Thread {
             } else {
                 String recipient = chatForm.getRecipient();
                 if (recipient != null) {
-                    sendCommand("SEND " + recipient + " " + extractMessage(message));
+                    String body = extractMessage(message);
+                    sendCommand("SEND " + recipient + " " + body);
+                    chatForm.write("You: " + body);
                 } else {
                     chatForm.write("You need to choose a recipient.", ChatForm.colorError);
                 }
@@ -116,7 +119,7 @@ public class Client extends Thread {
 
     private void sendCommand(String message) throws IOException {
         out.println(message);
-        System.out.println("\nSent:\n\t" + message);
+        System.out.println("\nSent:\n  " + message);
     }
 
 }

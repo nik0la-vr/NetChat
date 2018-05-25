@@ -6,17 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// Client -> Server
-// QUIT
-// NAME <my_name>
-// SEND <recipient_name> <message>
-
-// Server -> Client
-// NAME [ok|taken]
-// ONLINE <client_name>
-// OFFLINE <client_name>
-// RECEIVE <sender_name> <message>
-
 public class ServerWorker extends Thread {
 	
 	// client
@@ -41,7 +30,8 @@ public class ServerWorker extends Thread {
 
 			while ((line = in.readLine()) != null && !line.equals("QUIT")) {
                 String tokens[] = line.split("\\s+");
-                System.out.println("\nReceived from " + (name == null ? id : name) + ":\n\t" + line);
+                System.out.println("Received from " + (name == null ? id : name) + ":\n  " + line);
+                tokens[0] = tokens[0].toUpperCase();
 
                 if (name == null) {
                     if (tokens[0].equals("NAME")) {
@@ -74,9 +64,9 @@ public class ServerWorker extends Thread {
                 }
 			}
 
-            logout(server.workers);
+            logout();
         } catch (IOException e) {
-            logout(server.workers);
+            logout();
             System.out.println("Connection to " + (name != null ? name : id) + " was abruptly closed.");
 		}
 	}
@@ -85,9 +75,9 @@ public class ServerWorker extends Thread {
 	    return line.replaceFirst("\\w+\\s+\\w+\\s+", "");
     }
 
-	private void logout(Map<String, ServerWorker> map) {
+	private void logout() {
 	    if (name != null) {
-	        map.remove(name);
+	        server.workers.remove(name);
             broadcastCommand("OFFLINE " + name);
         }
     }
@@ -96,12 +86,12 @@ public class ServerWorker extends Thread {
         for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
             entry.getValue().sendCommand(message);
         }
-        System.out.println("\nSent to all:\n\t" + message);
+        System.out.println("Sent to all:\n  " + message);
     }
 
     private void sendCommand(String message) {
         out.println(message);
-        System.out.println("\nSent to " + (name != null ? name : id) + ":\n\t" + message);
+        System.out.println("Sent to " + (name != null ? name : id) + ":\n  " + message);
     }
 
 }

@@ -36,7 +36,7 @@ public class ChatForm extends AbstractForm {
         client = new Client(this);
         if (client.connect(ip, port)) {
             write("Connection to the server established.", ChatForm.colorSuccess);
-            write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
+            write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
             client.start();
         } else {
             criticalError("Connection to the server failed.");
