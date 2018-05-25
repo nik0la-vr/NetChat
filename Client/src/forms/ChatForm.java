@@ -16,6 +16,7 @@ public class ChatForm extends AbstractForm {
     private Client client;
 
     private JPanel panel;
+    private Action action;
     private JButton btnSend;
     private JTextPane textPane;
     private JList<String> list;
@@ -32,22 +33,21 @@ public class ChatForm extends AbstractForm {
 
     public ChatForm(String ip, int port) {
         this();
-        client = new Client(this, ip, port);
-        client.start();
+        client = new Client(this);
+        if (client.connect(ip, port)) {
+            write("Connection to the server established.", ChatForm.colorSuccess);
+            write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
+            client.start();
+        } else {
+            criticalError("Connection to the server failed.");
+        }
     }
 
     private ChatForm() {
         super.createWindow(panel, FRAME_WIDTH, FRAME_HEIGHT);
         super.setDefaultButton(btnSend);
 
-        textPane.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtMessage.requestFocusInWindow();
-            }
-        });
-
-        Action action = new AbstractAction() {
+        action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 client.sendMessage(txtMessage.getText());
@@ -57,6 +57,13 @@ public class ChatForm extends AbstractForm {
 
         txtMessage.addActionListener(action);
         btnSend.addActionListener(action);
+
+        textPane.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtMessage.requestFocusInWindow();
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -70,6 +77,16 @@ public class ChatForm extends AbstractForm {
 
     public void removeUser(String name) {
         listModel.removeElement(name);
+    }
+
+    public String getRecipient() {
+        return list.getSelectedValue();
+    }
+
+    public void criticalError(String error) {
+        txtMessage.removeActionListener(action);
+        btnSend.removeActionListener(action);
+        write("Critical error!!! " + error, ChatForm.colorError);
     }
 
     public void write(String message) {
@@ -87,10 +104,6 @@ public class ChatForm extends AbstractForm {
         textPane.setCaretPosition(len);
         textPane.setCharacterAttributes(aset, false);
         textPane.replaceSelection(message);
-    }
-
-    public String getRecipient() {
-        return list.getSelectedValue();
     }
 
     @Override

@@ -4,124 +4,119 @@ import forms.ChatForm;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Client extends Thread {
     private String name;
-    private Socket socket;
-    private InputStream in;
-    private OutputStream out;
+    private PrintWriter out;
+    private BufferedReader in;
     private ChatForm chatForm;
     private String chosenName;
 
-    public Client(ChatForm chatForm, String ip, int port) {
+    public Client(ChatForm chatForm) {
         this.chatForm = chatForm;
+    }
 
+    public boolean connect(String ip, int port) {
         try {
-            socket = new Socket(ip, port);
-            in = new BufferedInputStream(socket.getInputStream());
-            out = new BufferedOutputStream(socket.getOutputStream());
-            chatForm.write("Connection to the server established.", ChatForm.colorSuccess);
-            chatForm.write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
+            Socket socket = new Socket(ip, port);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            return true;
         } catch (IOException e) {
-            chatForm.write("There was a problem connecting to the server, please try again.", ChatForm.colorError);
+            e.printStackTrace();
+            return false;
         }
     }
 
     @Override
     public void run() {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                if (line.equals("")) continue;
+            String line;
 
-                ArrayList<String> tokens = parse(line);
-                String command = tokens.get(0);
-                tokens.remove(0);
+            while ((line = in.readLine()) != null) {
+                String tokens[] = line.split("\\s+");
+                System.out.println("Received:\n\t" + line);
 
-                switch (command) {
-                    case "error":
-                        error(tokens);
+                switch (tokens[0]) {
+                    case "ONLINE":
+                        if (tokens[1].equals("new")) {
+                            chatForm.addUser(tokens[2]);
+                        } else if (tokens[1].equals("all")) {
+                            for (int i = 2; i < tokens.length; ++i) {
+                                if (!tokens[i].equals(name)) {
+                                    chatForm.addUser(tokens[2]);
+                                }
+                            }
+                        }
                         break;
-                    case "online":
-                        chatForm.addUser(String.join(" ", tokens));
+                    case "OFFLINE":
+                        chatForm.removeUser(tokens[1]);
                         break;
-                    case "offline":
-                        chatForm.removeUser(String.join(" ", tokens));
+                    case "RECEIVE":
+                        chatForm.write(tokens[1] + ": " + extractMessage(line));
                         break;
-                    case "receive":
-                        String sender = tokens.get(0);
-                        tokens.remove(0);
-                        chatForm.write(String.format("%s: %s", sender, String.join(" ", tokens)));
-                        break;
-                    case "name":
-                        if (tokens.get(0).equals("ok")) {
+                    case "NAME":
+                        if (tokens[1].equals("ok")) {
                             name = chosenName;
-                            chatForm.setTitle(String.format("%s (%s)", chatForm.getTitle(), name));
-                            chatForm.write(String.format("Name set to %s.", name), ChatForm.colorSuccess);
+                            chatForm.setTitle(chatForm.getTitle() + " (" + name + ") ");
+                            chatForm.write("Name set to " + name + ".", ChatForm.colorSuccess);
+                            sendCommand("ONLINE all");
                         } else {
-                            chatForm.write("That name is already taken.", ChatForm.colorError);
+                            chatForm.write("That name is taken.", ChatForm.colorError);
                         }
                         chosenName = null;
                         break;
                     default:
-                        chatForm.write(String.format("Server sent unknown command '%s'.", command), ChatForm.colorWarn);
-                        sendCommand("error unknown " + command);
+                        System.err.println("Unknown command " + tokens[0] + ".");
                         break;
                 }
             }
         } catch (IOException e) {
-            chatForm.write("Connection to the server was abruptly closed.", ChatForm.colorError);
+            e.printStackTrace();
+            chatForm.criticalError("Connection to the server was abruptly closed.");
         }
     }
 
     public void sendMessage(String message) {
+        message = message.trim();
         if (message.equals("")) return;
 
         try {
-            if (name == null && chosenName == null) {
-                ArrayList<String> tokens = parse(message);
-                if (tokens.get(0).equals("name")) {
-                    if (tokens.size() == 2) {
-                        chosenName = tokens.get(1);
-                        sendCommand("name " + chosenName);
+            if (chosenName != null) {
+                chatForm.write("Waiting for the server to approve your name...", ChatForm.colorInfo);
+            } else if (name == null) {
+                String[] tokens = message.split("\\s+");
+                if (tokens[0].equals("NAME")) {
+                    if (tokens.length == 2) {
+                        chosenName = tokens[1];
+                        sendCommand("NAME " + chosenName);
                     } else {
                         chatForm.write("Name should not contain whitespaces.", ChatForm.colorError);
                     }
                 } else {
-                    chatForm.write("You have to set your name by typing 'name <name>'.", ChatForm.colorInfo);
+                    chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
                 }
             } else {
                 String recipient = chatForm.getRecipient();
                 if (recipient != null) {
-                    sendCommand(String.format("send %s %s", recipient, message));
+                    sendCommand("SEND " + recipient + " " + extractMessage(message));
                 } else {
-                    chatForm.write("You need to choose a recipient before this message can be sent", ChatForm.colorError);
+                    chatForm.write("You need to choose a recipient.", ChatForm.colorError);
                 }
             }
         } catch (IOException e) {
-            chatForm.write("Couldn't send message to the server.", ChatForm.colorError);
+            e.printStackTrace();
+            chatForm.criticalError("Something bad has happened, message couldn't be sent to the server.");
         }
     }
 
-    private ArrayList<String> parse(String line) {
-        return new ArrayList<>(Arrays.asList(line.trim().split("\\s+")));
-    }
-
-    private void error(ArrayList<String> tokens) {
-        String type = tokens.get(0);
-        switch (type) {
-            case "unknown":
-                chatForm.write(String.format("Unknown command '%s' sent to server", tokens.get(1)), ChatForm.colorError);
-                break;
-            default:
-                chatForm.write("Server reported undefined error.", ChatForm.colorWarn);
-                break;
-        }
+    private String extractMessage(String line) {
+        return line.replaceFirst("\\w+\\s+\\w+\\s+", "");
     }
 
     private void sendCommand(String message) throws IOException {
-        out.write(message.getBytes());
+        out.println(message);
+        System.out.println("\nSent:\n\t" + message);
     }
+
 }
