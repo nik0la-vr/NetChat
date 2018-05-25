@@ -50,6 +50,7 @@ class ServerWorker extends Thread {
                     if (command.equals("name")) {
                         if (tokens.size() > 0) {
                             name = String.join(" ", tokens);
+                            broadcastMessage("online " + name);
                             server.workers.put(name, this);
                         } else {
                             sendMessage("error expected 'name <name>'");
@@ -66,16 +67,27 @@ class ServerWorker extends Thread {
                 }
 			}
 
-            removeMe(server.workers);
+            logout(server.workers);
         } catch (IOException e) {
-		    removeMe(server.workers);
-			System.out.println(String.format("Connection to %s was abruptly closed.", name != null ? name : id));
+            try {
+                logout(server.workers);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            System.out.println(String.format("Connection to %s was abruptly closed.", name != null ? name : id));
 		}
 	}
 
-	private void removeMe(Map<String, ServerWorker> map) {
+	private void logout(Map<String, ServerWorker> map) throws IOException {
 	    if (name != null) {
 	        map.remove(name);
+	        broadcastMessage("offline " + name);
+        }
+    }
+
+    private void broadcastMessage(String message) throws IOException {
+        for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
+            entry.getValue().sendMessage(message);
         }
     }
 
