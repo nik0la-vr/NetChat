@@ -86,11 +86,11 @@ public class Client extends Thread {
     public void sendMessage(String message) {
         message = message.trim();
         if (message.equals("")) return;
+        String[] tokens = message.split("\\s+");
 
         if (chosenName != null) {
             chatForm.write("Waiting for the server to approve your name...", ChatForm.colorInfo);
         } else if (name == null) {
-            String[] tokens = message.split("\\s+");
             if (tokens[0].equals("NAME")) {
                 if (tokens.length == 2) {
                     chosenName = tokens[1];
@@ -101,6 +101,9 @@ public class Client extends Thread {
             } else {
                 chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
             }
+        } else if (tokens[0].equals("QUIT")) {
+            sendCommand("QUIT");
+            System.exit(0);
         } else {
             String recipient = chatForm.getRecipient();
             sendCommand("SEND " + recipient + " " + message);

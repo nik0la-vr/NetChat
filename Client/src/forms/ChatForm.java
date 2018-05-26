@@ -88,7 +88,7 @@ public class ChatForm extends AbstractForm {
     public void criticalError(String error) {
         txtMessage.removeActionListener(action);
         btnSend.removeActionListener(action);
-        write("Critical error!!! " + error, ChatForm.colorError);
+        write("Critical error: " + error, ChatForm.colorError);
     }
 
     public void write(String message) {
