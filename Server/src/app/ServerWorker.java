@@ -15,23 +15,23 @@ public class ServerWorker extends Thread {
 	private BufferedReader in;
 	private ServerMain server;
 	
-	public ServerWorker(ServerMain server, Socket socket) throws IOException {
+	ServerWorker(ServerMain server, Socket socket) throws IOException {
 	    this.server = server;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 		id = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
-        System.out.println("Connected to " + id + ".");
     }
 	
 	@Override
 	public void run() {
+        System.out.println("Connected to " + id + ".");
+
         try {
 			String line;
 
 			while ((line = in.readLine()) != null && !line.equals("QUIT")) {
                 String tokens[] = line.split("\\s+");
                 System.out.println("Received from " + (name == null ? id : name) + ":\n  " + line);
-                tokens[0] = tokens[0].toUpperCase();
 
                 if (name == null) {
                     if (tokens[0].equals("NAME")) {
