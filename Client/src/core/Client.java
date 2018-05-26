@@ -2,6 +2,7 @@ package core;
 
 import forms.ChatForm;
 
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -52,6 +53,7 @@ public class Client extends Thread {
                         break;
                     case "OFFLINE":
                         chatForm.removeUser(tokens[1]);
+                        chatForm.write(tokens[1] + " went offline.", ChatForm.colorInfo);
                         break;
                     case "RECEIVE":
                         chatForm.write(tokens[1] + ": " + extractMessage(line));
