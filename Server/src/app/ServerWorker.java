@@ -52,9 +52,21 @@ public class ServerWorker extends Thread {
                             }
                             break;
                         case "SEND":
-                            ServerWorker recipient = server.workers.get(tokens[1]);
-                            if (recipient != null) {
-                                recipient.sendCommand("RECEIVE " + name + " " + extractMessage(line));
+                            String message = extractMessage(line);
+                            if (tokens[1].equals("all")) {
+                                for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
+                                    ServerWorker worker = entry.getValue();
+                                    if (!worker.name.equals(name)) {
+                                        worker.sendCommand("RECEIVE " + name + " " + message);
+                                    }
+                                }
+                            } else {
+                                ServerWorker recipient = server.workers.get(tokens[1]);
+                                if (recipient != null) {
+                                    recipient.sendCommand("RECEIVE " + name + " " + message);
+                                } else {
+                                    sendCommand("ERROR recipient");
+                                }
                             }
                             break;
                         default:

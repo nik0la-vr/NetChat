@@ -98,14 +98,8 @@ public class Client extends Thread {
                     chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
                 }
             } else {
-                String recipient = chatForm.getRecipient();
-                if (recipient != null) {
-                    String body = extractMessage(message);
-                    sendCommand("SEND " + recipient + " " + body);
-                    chatForm.write("You: " + body);
-                } else {
-                    chatForm.write("You need to choose a recipient.", ChatForm.colorError);
-                }
+                sendCommand("SEND " + chatForm.getRecipient() + " " + message);
+                chatForm.write("You: " + message);
             }
         } catch (IOException e) {
             e.printStackTrace();

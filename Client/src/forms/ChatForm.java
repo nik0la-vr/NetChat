@@ -68,7 +68,9 @@ public class ChatForm extends AbstractForm {
 
     private void createUIComponents() {
         listModel = new DefaultListModel<>();
+        listModel.addElement("all");
         list = new JList<>(listModel);
+        list.setSelectedIndex(0);
     }
 
     public void addUser(String name) {
