@@ -23,30 +23,39 @@ public class ChatForm extends AbstractForm {
     private JTextField txtMessage;
     private DefaultListModel<String> listModel;
 
+    //region Constants
     public static final int FRAME_WIDTH = 640;
     public static final int FRAME_HEIGHT = 480;
+    public static final Color COLOR_INFO = Color.BLUE;
+    public static final Color COLOR_ERROR = Color.RED;
+    public static final Color COLOR_PLAIN = Color.BLACK;
+    public static final Color COLOR_WARN = Color.ORANGE;
+    public static final Color COLOR_MINE = new Color(136, 0, 21);
+    public static final Color COLOR_SUCCESS = new Color(0, 102, 0);
+    //endregion
 
-    public static final Color colorInfo = Color.BLUE;
-    public static final Color colorError = Color.RED;
-    public static final Color colorWarn = Color.ORANGE;
-    public static final Color colorMine = new Color(136, 0, 21);
-    public static final Color colorSuccess = new Color(0, 102, 0);
-
-    public ChatForm(String ip, int port) {
-        this();
-        client = new Client(this);
-        if (client.connect(ip, port)) {
-            write("Connection to the server established.", ChatForm.colorSuccess);
-            write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
-            client.start();
-        } else {
-            criticalError("Connection to the server failed.");
-        }
+    private void createUIComponents() {
+        listModel = new DefaultListModel<>();
+        listModel.addElement("all");
+        list = new JList<>(listModel);
+        list.setSelectedIndex(0);
     }
 
-    private ChatForm() {
-        super.createWindow(panel, FRAME_WIDTH, FRAME_HEIGHT);
-        super.setDefaultButton(btnSend);
+    public ChatForm() {
+        super.createFrame("Chat", panel, new Dimension(FRAME_WIDTH, FRAME_HEIGHT)).setDefaultButton(btnSend);
+
+        textPane.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtMessage.requestFocusInWindow();
+            }
+        });
+
+        txtMessage.requestFocusInWindow();
+    }
+
+    void connect(String ip, int port) {
+        client = new Client(this);
 
         action = new AbstractAction() {
             @Override
@@ -59,19 +68,13 @@ public class ChatForm extends AbstractForm {
         txtMessage.addActionListener(action);
         btnSend.addActionListener(action);
 
-        textPane.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtMessage.requestFocusInWindow();
-            }
-        });
-    }
-
-    private void createUIComponents() {
-        listModel = new DefaultListModel<>();
-        listModel.addElement("all");
-        list = new JList<>(listModel);
-        list.setSelectedIndex(0);
+        if (client.connect(ip, port)) {
+            success("Connection to the server established.");
+            info("You have to set your name by typing 'NAME <name>'.");
+            client.start();
+        } else {
+            criticalError("Connection to the server failed.");
+        }
     }
 
     public void addUser(String name) {
@@ -89,15 +92,34 @@ public class ChatForm extends AbstractForm {
     public void criticalError(String error) {
         txtMessage.removeActionListener(action);
         btnSend.removeActionListener(action);
-        write("Critical error: " + error, ChatForm.colorError);
+        error("Critical error: " + error);
     }
 
-    public void write(String message) {
-        write(message, Color.BLACK);
+    public void success(String message) {
+        write(message, ChatForm.COLOR_SUCCESS);
     }
 
-    public void write(String message, Color color) {
-        message += "\n";
+    public void error(String message) {
+        write(message, ChatForm.COLOR_ERROR);
+    }
+
+    public void warn(String message) {
+        write(message, ChatForm.COLOR_WARN);
+    }
+
+    public void info(String message) {
+        write(message, ChatForm.COLOR_INFO);
+    }
+
+    public void plain(String message) {
+        write(message, ChatForm.COLOR_PLAIN);
+    }
+
+    public void mine(String message) {
+        write(message, ChatForm.COLOR_MINE);
+    }
+
+    private void write(String message, Color color) {
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
@@ -106,12 +128,6 @@ public class ChatForm extends AbstractForm {
         int len = textPane.getDocument().getLength();
         textPane.setCaretPosition(len);
         textPane.setCharacterAttributes(aset, false);
-        textPane.replaceSelection(message);
+        textPane.replaceSelection(message + "\n");
     }
-
-    @Override
-    String getInitialTitle() {
-        return "Chat";
-    }
-
 }

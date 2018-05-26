@@ -6,17 +6,16 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
-abstract class TextValidator {
+public abstract class TextValidator {
 	private Border border;
-	
-	JTextComponent textField;
+	protected JTextComponent textField;
 	
 	public TextValidator(JTextComponent textField, String message) {
 		this.textField = textField;
 		border = textField.getBorder();
-		
+
 		String tooltip = this.textField.getToolTipText();
-		
+
 		if (tooltip == null) {
 			this.textField.setToolTipText("<html>" + message + "</html>");
 		} else {
@@ -25,17 +24,15 @@ abstract class TextValidator {
 	}
 	
 	public boolean validate() {
-		textField.setText(textField.getText().trim());
-		
-		if (isValid()) {
-			textField.setBorder(border);
-			return true;
-		} else {
-			textField.setBorder(BorderFactory.createLineBorder(Color.RED));
-			return false;
-		}
-	}
+        textField.setText(textField.getText().trim());
+        if (isValid()) {
+            textField.setBorder(border);
+            return true;
+        } else {
+            textField.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return false;
+        }
+    }
 	
-	
-	abstract boolean isValid();
+	public abstract boolean isValid();
 }

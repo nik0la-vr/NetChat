@@ -1,30 +1,28 @@
 package forms;
 
 import javax.swing.*;
+import java.awt.*;
 
-abstract class AbstractForm {
+public abstract class AbstractForm {
     private JFrame frame;
 
-    void setDefaultButton(JButton button) {
+    AbstractForm createFrame(String title, JPanel panel, Dimension dimension) {
+        frame = new JFrame(title);
+        frame.setContentPane(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        if (dimension == null) {
+            frame.pack();
+        } else {
+            frame.setSize(dimension.width, dimension.height);
+        }
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        return this;
+    }
+
+    AbstractForm setDefaultButton(JButton button) {
         frame.getRootPane().setDefaultButton(button);
-    }
-
-    void createWindow(JPanel panel) {
-        frame = new JFrame(this.getInitialTitle());
-        frame.setContentPane(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
-    void createWindow(JPanel panel, int width, int height) {
-        frame = new JFrame(this.getInitialTitle());
-        frame.setContentPane(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        return this;
     }
 
     public void dispose() {
@@ -38,6 +36,4 @@ abstract class AbstractForm {
     public void setTitle(String title) {
         frame.setTitle(title);
     }
-
-    abstract String getInitialTitle();
 }

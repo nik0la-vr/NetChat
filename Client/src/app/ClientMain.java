@@ -6,14 +6,13 @@ import javax.swing.*;
 
 public class ClientMain {
 
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args)
+        throws ClassNotFoundException, UnsupportedLookAndFeelException,
+            InstantiationException, IllegalAccessException {
 
-        new LoginForm();
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        new LoginForm().init();
+
     }
 
 }

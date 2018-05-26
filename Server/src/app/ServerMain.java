@@ -28,7 +28,6 @@ public class ServerMain {
         if (args.length == 1) {
             port = Integer.parseInt(args[0]);
         }
-        ServerMain server = new ServerMain();
-        server.startServer(port);
+        new ServerMain().startServer(port);
     }
 }

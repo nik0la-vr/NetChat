@@ -12,7 +12,6 @@ public class MaxLenValidator extends TextValidator {
 
 	@Override
 	public boolean isValid() {
-		return textField.getText().length() < maxLen; 
-	}
-	
+        return textField.getText().length() < maxLen;
+    }
 }

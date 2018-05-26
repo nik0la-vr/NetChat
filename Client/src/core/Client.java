@@ -8,6 +8,7 @@ import java.net.Socket;
 
 public class Client extends Thread {
     private String name;
+    private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private ChatForm chatForm;
@@ -19,11 +20,18 @@ public class Client extends Thread {
 
     public boolean connect(String ip, int port) {
         try {
-            Socket socket = new Socket(ip, port);
+            socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             return true;
         } catch (IOException e) {
+            try {
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
             return false;
         }
@@ -53,24 +61,24 @@ public class Client extends Thread {
                         break;
                     case "OFFLINE":
                         chatForm.removeUser(tokens[1]);
-                        chatForm.write(tokens[1] + " went offline.", ChatForm.colorInfo);
+                        chatForm.info(tokens[1] + " went offline.");
                         break;
                     case "RECEIVE":
-                        chatForm.write(tokens[1] + ": " + line.replaceFirst("\\w+\\s+\\w+\\s+", ""));
+                        chatForm.plain(tokens[1] + ": " + line.replaceFirst("\\w+\\s+\\w+\\s+", ""));
                         break;
                     case "ERROR":
                         if (tokens[1].equals("recipient")) {
-                            chatForm.write("Couldn't find specified recipient.", ChatForm.colorError);
+                            chatForm.error("Couldn't find specified recipient.");
                         }
                         break;
                     case "NAME":
                         if (tokens[1].equals("ok")) {
                             name = chosenName;
                             chatForm.setTitle(chatForm.getTitle() + " (" + name + ") ");
-                            chatForm.write("Name set to " + name + ".", ChatForm.colorSuccess);
+                            chatForm.success("Name set to " + name + ".");
                             sendCommand("ONLINE all");
                         } else {
-                            chatForm.write("That name is taken.", ChatForm.colorError);
+                            chatForm.error("That name is taken.");
                         }
                         chosenName = null;
                         break;
@@ -82,6 +90,14 @@ public class Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             chatForm.criticalError("Connection to the server was abruptly closed.");
+        } finally {
+            try {
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -91,17 +107,17 @@ public class Client extends Thread {
         String[] tokens = message.split("\\s+");
 
         if (chosenName != null) {
-            chatForm.write("Waiting for the server to approve your name...", ChatForm.colorInfo);
+            chatForm.info("Waiting for the server to approve your name...");
         } else if (name == null) {
             if (tokens[0].equals("NAME")) {
                 if (tokens.length == 2) {
                     chosenName = tokens[1];
                     sendCommand("NAME " + chosenName);
                 } else {
-                    chatForm.write("Name should not contain whitespaces.", ChatForm.colorError);
+                    chatForm.error("Name should not contain whitespaces.");
                 }
             } else {
-                chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
+                chatForm.info("You have to set your name by typing 'NAME <name>'.");
             }
         } else if (tokens[0].equals("QUIT")) {
             sendCommand("QUIT");
@@ -109,7 +125,7 @@ public class Client extends Thread {
         } else {
             String recipient = chatForm.getRecipient();
             sendCommand("SEND " + recipient + " " + message);
-            chatForm.write("You2" + recipient + ": " + message, ChatForm.colorMine);
+            chatForm.mine("You2" + recipient + ": " + message);
         }
     }
 
@@ -117,5 +133,4 @@ public class Client extends Thread {
         out.println(message);
         System.out.println("Sent:\n  " + message);
     }
-
 }

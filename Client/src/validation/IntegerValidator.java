@@ -3,7 +3,7 @@ package validation;
 import javax.swing.text.JTextComponent;
 
 public class IntegerValidator extends TextValidator {
-	
+
 	public IntegerValidator(JTextComponent textField) {
 		super(textField, "Only integer numbers are allowed.");
 	}
@@ -17,5 +17,5 @@ public class IntegerValidator extends TextValidator {
 			return false;
 		}
 	}
-	
+
 }
