@@ -29,6 +29,7 @@ public class ChatForm extends AbstractForm {
     public static final Color colorInfo = Color.BLUE;
     public static final Color colorError = Color.RED;
     public static final Color colorWarn = Color.ORANGE;
+    public static final Color colorMine = new Color(136, 0, 21);
     public static final Color colorSuccess = new Color(0, 102, 0);
 
     public ChatForm(String ip, int port) {

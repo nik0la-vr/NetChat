@@ -109,7 +109,7 @@ public class Client extends Thread {
         } else {
             String recipient = chatForm.getRecipient();
             sendCommand("SEND " + recipient + " " + message);
-            chatForm.write("You2" + recipient + ": " + message);
+            chatForm.write("You2" + recipient + ": " + message, ChatForm.colorMine);
         }
     }
 
