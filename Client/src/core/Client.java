@@ -56,6 +56,11 @@ public class Client extends Thread {
                     case "RECEIVE":
                         chatForm.write(tokens[1] + ": " + extractMessage(line));
                         break;
+                    case "ERROR":
+                        if (tokens[1].equals("recipient")) {
+                            chatForm.write("Couldn't find specified recipient.", ChatForm.colorError);
+                        }
+                        break;
                     case "NAME":
                         if (tokens[1].equals("ok")) {
                             name = chosenName;
@@ -82,29 +87,24 @@ public class Client extends Thread {
         message = message.trim();
         if (message.equals("")) return;
 
-        try {
-            if (chosenName != null) {
-                chatForm.write("Waiting for the server to approve your name...", ChatForm.colorInfo);
-            } else if (name == null) {
-                String[] tokens = message.split("\\s+");
-                if (tokens[0].equals("NAME")) {
-                    if (tokens.length == 2) {
-                        chosenName = tokens[1];
-                        sendCommand("NAME " + chosenName);
-                    } else {
-                        chatForm.write("Name should not contain whitespaces.", ChatForm.colorError);
-                    }
+        if (chosenName != null) {
+            chatForm.write("Waiting for the server to approve your name...", ChatForm.colorInfo);
+        } else if (name == null) {
+            String[] tokens = message.split("\\s+");
+            if (tokens[0].equals("NAME")) {
+                if (tokens.length == 2) {
+                    chosenName = tokens[1];
+                    sendCommand("NAME " + chosenName);
                 } else {
-                    chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
+                    chatForm.write("Name should not contain whitespaces.", ChatForm.colorError);
                 }
             } else {
-                String recipient = chatForm.getRecipient();
-                sendCommand("SEND " + recipient + " " + message);
-                chatForm.write("You2" + recipient + ": " + message);
+                chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            chatForm.criticalError("Something bad has happened, message couldn't be sent to the server.");
+        } else {
+            String recipient = chatForm.getRecipient();
+            sendCommand("SEND " + recipient + " " + message);
+            chatForm.write("You2" + recipient + ": " + message);
         }
     }
 
@@ -112,7 +112,7 @@ public class Client extends Thread {
         return line.replaceFirst("\\w+\\s+\\w+\\s+", "");
     }
 
-    private void sendCommand(String message) throws IOException {
+    private void sendCommand(String message) {
         out.println(message);
         System.out.println("Sent:\n  " + message);
     }
