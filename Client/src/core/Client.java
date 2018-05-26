@@ -56,7 +56,7 @@ public class Client extends Thread {
                         chatForm.write(tokens[1] + " went offline.", ChatForm.colorInfo);
                         break;
                     case "RECEIVE":
-                        chatForm.write(tokens[1] + ": " + extractMessage(line));
+                        chatForm.write(tokens[1] + ": " + line.replaceFirst("\\w+\\s+\\w+\\s+", ""));
                         break;
                     case "ERROR":
                         if (tokens[1].equals("recipient")) {
@@ -111,10 +111,6 @@ public class Client extends Thread {
             sendCommand("SEND " + recipient + " " + message);
             chatForm.write("You2" + recipient + ": " + message, ChatForm.colorMine);
         }
-    }
-
-    private String extractMessage(String line) {
-        return line.replaceFirst("\\w+\\s+\\w+\\s+", "");
     }
 
     private void sendCommand(String message) {

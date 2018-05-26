@@ -15,7 +15,7 @@ public class ServerMain {
 
     private void startServer(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server started.");
+        System.out.println("Server listening on port " + port + ".");
         while (true) {
             Socket clientSocket = serverSocket.accept();
             ServerWorker worker = new ServerWorker(this, clientSocket);

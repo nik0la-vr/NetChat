@@ -52,10 +52,9 @@ public class ServerWorker extends Thread {
                             }
                             break;
                         case "SEND":
-                            String message = extractMessage(line);
+                            String message = line.replaceFirst("\\w+\\s+\\w+\\s+", "");
                             if (tokens[1].equals("all")) {
-                                for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
-                                    ServerWorker worker = entry.getValue();
+                                for (ServerWorker worker: server.workers.values()) {
                                     if (!worker.name.equals(name)) {
                                         worker.sendCommand("RECEIVE " + name + " " + message);
                                     }
@@ -83,10 +82,6 @@ public class ServerWorker extends Thread {
 		}
 	}
 
-	private String extractMessage(String line) {
-	    return line.replaceFirst("\\w+\\s+\\w+\\s+", "");
-    }
-
 	private void logout() {
 	    if (name != null) {
 	        server.workers.remove(name);
@@ -95,8 +90,8 @@ public class ServerWorker extends Thread {
     }
 
     private void broadcastCommand(String message) {
-        for (Map.Entry<String, ServerWorker> entry : server.workers.entrySet()) {
-            entry.getValue().sendCommand(message);
+        for (ServerWorker worker: server.workers.values()) {
+            worker.sendCommand(message);
         }
         System.out.println("Sent to all:\n  " + message);
     }
