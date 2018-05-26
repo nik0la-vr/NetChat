@@ -98,8 +98,9 @@ public class Client extends Thread {
                     chatForm.write("You have to set your name by typing 'NAME <name>'.", ChatForm.colorInfo);
                 }
             } else {
-                sendCommand("SEND " + chatForm.getRecipient() + " " + message);
-                chatForm.write("You: " + message);
+                String recipient = chatForm.getRecipient();
+                sendCommand("SEND " + recipient + " " + message);
+                chatForm.write("You2" + recipient + ": " + message);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -113,7 +114,7 @@ public class Client extends Thread {
 
     private void sendCommand(String message) throws IOException {
         out.println(message);
-        System.out.println("\nSent:\n  " + message);
+        System.out.println("Sent:\n  " + message);
     }
 
 }
