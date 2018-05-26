@@ -11,12 +11,14 @@ public class ServerWorker extends Thread {
 	// client
     private String id;
     private String name;
+    private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
 	private ServerMain server;
 	
 	ServerWorker(ServerMain server, Socket socket) throws IOException {
 	    this.server = server;
+	    this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 		id = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
@@ -83,9 +85,16 @@ public class ServerWorker extends Thread {
 	}
 
 	private void logout() {
-	    if (name != null) {
+        if (name != null) {
 	        server.workers.remove(name);
             broadcastCommand("OFFLINE " + name);
+        }
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

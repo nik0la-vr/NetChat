@@ -1,11 +1,10 @@
-# Commands
-## Client -> Server
+#Klijent -> Server
 * `QUIT`
 * `ONLINE all`
 * `NAME <my_name>`
 * `SEND [all|<recipient_name>] <message>`
 
-## Server -> Client
+# Server -> Klijent
 * `NAME [ok|taken]`
 * `ERROR recipient`
 * `OFFLINE <client_name>`
