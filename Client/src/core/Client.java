@@ -25,13 +25,6 @@ public class Client extends Thread {
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             return true;
         } catch (IOException e) {
-            try {
-                in.close();
-                out.close();
-                socket.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
             e.printStackTrace();
             return false;
         }
