@@ -44,6 +44,7 @@ public class Client extends Thread {
                     case "ONLINE":
                         if (tokens[1].equals("new")) {
                             chatForm.addUser(tokens[2]);
+                            chatForm.info(tokens[2] + " is now online.");
                         } else if (tokens[1].equals("all")) {
                             for (int i = 2; i < tokens.length; ++i) {
                                 if (!tokens[i].equals(name)) {
