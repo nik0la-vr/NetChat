@@ -1,4 +1,4 @@
-package validation;
+package chat.client.validation;
 
 import javax.swing.text.JTextComponent;
 

@@ -1,6 +1,6 @@
-package app;
+package chat.client.app;
 
-import forms.LoginForm;
+import chat.client.forms.LoginForm;
 
 import javax.swing.*;
 

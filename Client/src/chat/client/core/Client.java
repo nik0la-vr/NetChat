@@ -1,8 +1,8 @@
-package core;
+package chat.client.core;
 
-import forms.ChatForm;
+import chat.client.forms.ChatForm;
+import chat.comon.Utils;
 
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -58,7 +58,7 @@ public class Client extends Thread {
                         chatForm.info(tokens[1] + " went offline.");
                         break;
                     case "RECEIVE":
-                        chatForm.plain(tokens[1] + ": " + line.replaceFirst("\\w+\\s+\\w+\\s+", ""));
+                        chatForm.plain(tokens[1] + ": " + Utils.extractMessage(line));
                         break;
                     case "ERROR":
                         if (tokens[1].equals("recipient")) {

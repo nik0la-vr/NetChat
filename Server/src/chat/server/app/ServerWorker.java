@@ -1,10 +1,10 @@
-package app;
+package chat.server.app;
+
+import chat.comon.Utils;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ServerWorker extends Thread {
 	
@@ -54,7 +54,7 @@ public class ServerWorker extends Thread {
                             }
                             break;
                         case "SEND":
-                            String message = line.replaceFirst("\\w+\\s+\\w+\\s+", "");
+                            String message = Utils.extractMessage(line);
                             if (tokens[1].equals("all")) {
                                 for (ServerWorker worker: server.workers.values()) {
                                     if (!worker.name.equals(name)) {

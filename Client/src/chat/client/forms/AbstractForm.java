@@ -1,4 +1,4 @@
-package forms;
+package chat.client.forms;
 
 import javax.swing.*;
 import java.awt.*;

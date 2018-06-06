@@ -1,11 +1,10 @@
-package forms;
+package chat.client.forms;
 
-import validation.IntegerValidator;
-import validation.MaxLenValidator;
-import validation.RequiredValidator;
+import chat.client.validation.IntegerValidator;
+import chat.client.validation.MaxLenValidator;
+import chat.client.validation.RequiredValidator;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class LoginForm extends AbstractForm {
     private JPanel panel;

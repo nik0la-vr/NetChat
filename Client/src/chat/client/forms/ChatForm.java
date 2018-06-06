@@ -1,6 +1,6 @@
-package forms;
+package chat.client.forms;
 
-import core.Client;
+import chat.client.core.Client;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
