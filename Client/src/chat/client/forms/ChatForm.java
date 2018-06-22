@@ -55,7 +55,8 @@ public class ChatForm extends AbstractForm {
     }
 
     void connect(String ip, int port) {
-        client = new Client(this);
+        client = new Client(ip, port, this);
+        client.execute();
 
         action = new AbstractAction() {
             @Override
@@ -65,16 +66,8 @@ public class ChatForm extends AbstractForm {
             }
         };
 
-        txtMessage.addActionListener(action);
         btnSend.addActionListener(action);
-
-        if (client.connect(ip, port)) {
-            success("Connection to the server established.");
-            info("You have to set your name by typing 'NAME <name>'.");
-            client.start();
-        } else {
-            criticalError("Connection to the server failed.");
-        }
+        txtMessage.addActionListener(action);
     }
 
     public void addUser(String name) {
@@ -90,8 +83,8 @@ public class ChatForm extends AbstractForm {
     }
 
     public void criticalError(String error) {
-        txtMessage.removeActionListener(action);
         btnSend.removeActionListener(action);
+        txtMessage.removeActionListener(action);
         error("Critical error: " + error);
     }
 
