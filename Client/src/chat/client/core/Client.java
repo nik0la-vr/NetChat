@@ -1,7 +1,7 @@
 package chat.client.core;
 
+import chat.client.Utils;
 import chat.client.forms.ChatForm;
-import chat.comon.Utils;
 
 import javax.swing.*;
 import java.io.*;
@@ -103,7 +103,7 @@ public class Client extends SwingWorker<Void, GUITask> {
 
     @Override
     protected void process(List<GUITask> chunks) {
-        for (GUITask task: chunks) {
+        for (GUITask task : chunks) {
             task.action.accept(task.data);
         }
     }

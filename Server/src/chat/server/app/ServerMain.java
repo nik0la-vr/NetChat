@@ -13,6 +13,14 @@ public class ServerMain {
         workers = new ConcurrentHashMap<>();
     }
 
+    public static void main(String[] args) throws IOException {
+        int port = 8818;
+        if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+        }
+        new ServerMain().startServer(port);
+    }
+
     private void startServer(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server listening on port " + port + ".");
@@ -21,13 +29,5 @@ public class ServerMain {
             ServerWorker worker = new ServerWorker(this, clientSocket);
             worker.start();
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        int port = 8818;
-        if (args.length == 1) {
-            port = Integer.parseInt(args[0]);
-        }
-        new ServerMain().startServer(port);
     }
 }

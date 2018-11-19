@@ -13,16 +13,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class ChatForm extends AbstractForm {
-    private Client client;
-
-    private JPanel panel;
-    private Action action;
-    private JButton btnSend;
-    private JTextPane textPane;
-    private JList<String> list;
-    private JTextField txtMessage;
-    private DefaultListModel<String> listModel;
-
     //region Constants
     public static final int FRAME_WIDTH = 640;
     public static final int FRAME_HEIGHT = 480;
@@ -32,14 +22,15 @@ public class ChatForm extends AbstractForm {
     public static final Color COLOR_WARN = Color.ORANGE;
     public static final Color COLOR_MINE = new Color(136, 0, 21);
     public static final Color COLOR_SUCCESS = new Color(0, 102, 0);
+    private Client client;
+    private JPanel panel;
+    private Action action;
+    private JButton btnSend;
+    private JTextPane textPane;
+    private JList<String> list;
+    private JTextField txtMessage;
+    private DefaultListModel<String> listModel;
     //endregion
-
-    private void createUIComponents() {
-        listModel = new DefaultListModel<>();
-        listModel.addElement("all");
-        list = new JList<>(listModel);
-        list.setSelectedIndex(0);
-    }
 
     public ChatForm() {
         super.createFrame("Chat", panel, new Dimension(FRAME_WIDTH, FRAME_HEIGHT)).setDefaultButton(btnSend);
@@ -52,6 +43,13 @@ public class ChatForm extends AbstractForm {
         });
 
         txtMessage.requestFocusInWindow();
+    }
+
+    private void createUIComponents() {
+        listModel = new DefaultListModel<>();
+        listModel.addElement("all");
+        list = new JList<>(listModel);
+        list.setSelectedIndex(0);
     }
 
     void connect(String ip, int port) {

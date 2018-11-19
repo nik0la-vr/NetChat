@@ -7,7 +7,7 @@ import javax.swing.*;
 public class ClientMain {
 
     public static void main(String[] args)
-        throws ClassNotFoundException, UnsupportedLookAndFeelException,
+            throws ClassNotFoundException, UnsupportedLookAndFeelException,
             InstantiationException, IllegalAccessException {
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

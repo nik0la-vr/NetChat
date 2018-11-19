@@ -1,4 +1,4 @@
-# Chat
+# NetChat
 
 Domaći iz računarskih mreža. Prosta klijent-server čet aplikacija u Javi.
 
@@ -6,9 +6,9 @@ Domaći iz računarskih mreža. Prosta klijent-server čet aplikacija u Javi.
 
 ## Korišćenje
 
-Najlakše je izbildovati iz [IntelliJ IDEA](https://www.jetbrains.com/idea/download/). Alternativno pogledajte [How do I compile and run Intelij IDEA java project without IDE?](https://stackoverflow.com/questions/22857478/how-do-i-compile-and-run-intelij-idea-java-project-without-ide).
+Najlakše je izbildovati iz [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (**Build | Build Artifacts**).
 
-Serveru se broj porta može proslediti kao argument komandne linije, a podrazumevan je 8818.
+Serveru se broj porta može proslediti kao argument komandne linije, a podrazumevani je 8818.
 
 ```bash
 java -jar Server.jar <port_number>

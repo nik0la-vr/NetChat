@@ -1,29 +1,28 @@
 package chat.client.validation;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
+import java.awt.*;
 
 public abstract class TextValidator {
-	private Border border;
-	protected JTextComponent textField;
-	
-	public TextValidator(JTextComponent textField, String message) {
-		this.textField = textField;
-		border = textField.getBorder();
+    protected JTextComponent textField;
+    private Border border;
 
-		String tooltip = this.textField.getToolTipText();
+    public TextValidator(JTextComponent textField, String message) {
+        this.textField = textField;
+        border = textField.getBorder();
 
-		if (tooltip == null) {
-			this.textField.setToolTipText("<html>" + message + "</html>");
-		} else {
-			this.textField.setToolTipText(tooltip.replaceFirst("</html>", "") + "<br>" + message + "</html>");
-		}
-	}
-	
-	public boolean validate() {
+        String tooltip = this.textField.getToolTipText();
+
+        if (tooltip == null) {
+            this.textField.setToolTipText("<html>" + message + "</html>");
+        } else {
+            this.textField.setToolTipText(tooltip.replaceFirst("</html>", "") + "<br>" + message + "</html>");
+        }
+    }
+
+    public boolean validate() {
         textField.setText(textField.getText().trim());
         if (isValid()) {
             textField.setBorder(border);
@@ -33,6 +32,6 @@ public abstract class TextValidator {
             return false;
         }
     }
-	
-	public abstract boolean isValid();
+
+    public abstract boolean isValid();
 }

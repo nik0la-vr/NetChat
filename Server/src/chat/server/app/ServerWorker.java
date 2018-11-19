@@ -1,37 +1,35 @@
 package chat.server.app;
 
-import chat.comon.Utils;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerWorker extends Thread {
-	
-	// client
+
+    // client
     private String id;
     private String name;
     private Socket socket;
-	private PrintWriter out;
-	private BufferedReader in;
-	private ServerMain server;
-	
-	ServerWorker(ServerMain server, Socket socket) throws IOException {
-	    this.server = server;
-	    this.socket = socket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private ServerMain server;
+
+    ServerWorker(ServerMain server, Socket socket) throws IOException {
+        this.server = server;
+        this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-		id = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
+        id = socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
     }
-	
-	@Override
-	public void run() {
+
+    @Override
+    public void run() {
         System.out.println("Connected to " + id + ".");
 
         try {
-			String line;
+            String line;
 
-			while ((line = in.readLine()) != null && !line.equals("QUIT")) {
+            while ((line = in.readLine()) != null && !line.equals("QUIT")) {
                 String tokens[] = line.split("\\s+");
                 System.out.println("Received from " + (name == null ? id : name) + ":\n  " + line);
 
@@ -56,7 +54,7 @@ public class ServerWorker extends Thread {
                         case "SEND":
                             String message = Utils.extractMessage(line);
                             if (tokens[1].equals("all")) {
-                                for (ServerWorker worker: server.workers.values()) {
+                                for (ServerWorker worker : server.workers.values()) {
                                     if (!worker.name.equals(name)) {
                                         worker.sendCommand("RECEIVE " + name + " " + message);
                                     }
@@ -75,18 +73,18 @@ public class ServerWorker extends Thread {
                             break;
                     }
                 }
-			}
+            }
 
             logout();
         } catch (IOException e) {
             logout();
             System.out.println("Connection to " + (name != null ? name : id) + " was abruptly closed.");
-		}
-	}
+        }
+    }
 
-	private void logout() {
+    private void logout() {
         if (name != null) {
-	        server.workers.remove(name);
+            server.workers.remove(name);
             broadcastCommand("OFFLINE " + name);
         }
         try {
@@ -99,7 +97,7 @@ public class ServerWorker extends Thread {
     }
 
     private void broadcastCommand(String message) {
-        for (ServerWorker worker: server.workers.values()) {
+        for (ServerWorker worker : server.workers.values()) {
             worker.sendCommand(message);
         }
         System.out.println("Sent to all:\n  " + message);
