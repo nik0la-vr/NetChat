@@ -1,4 +1,4 @@
-# NetChat
+# chat-app
 
 Domaći iz računarskih mreža. Prosta klijent-server čet aplikacija u Javi.
 
